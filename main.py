@@ -7,7 +7,10 @@ from sklearn.metrics.pairwise import cosine_similarity
 app = FastAPI()
 
 # Cargar el dataset
-movies = pd.read_parquet("Credits_movies.parquet")  # Asegúrate de especificar la ruta correcta
+movies = pd.read_parquet("Dataset/movies_modificado.parquet")  
+crew_df = pd.read_csv("Dataset/crew_credits.csv")  
+cast_df = pd.read_csv("Dataset/cast_credits.csv")  
+
 
  #Crear el vectorizador y ajustar al dataset
 tfidf_vectorizer = TfidfVectorizer(stop_words='english')
@@ -72,26 +75,51 @@ def votos_titulo(titulo: str):
         return "Película no encontrada."
 
 # 5. Función para obtener informacion sobre el actor
-@app.get("/get_actor/{nombre_actor}")
+@app.get("/actor/{nombre_actor}")
 def get_actor(nombre_actor: str):
-    try:
-        # Filtrar las películas en las que el actor ha participado
-        actor_films = movies[movies['NameActor'].str.contains(nombre_actor, case=False, na=False)]
-        
-        if not actor_films.empty:
-            cantidad = actor_films.shape[0]
-            retorno_total = actor_films['return'].sum()
-            promedio_retorno = actor_films['return'].mean()
-            return {
-                "Actor": nombre_actor,
-                "Cantidad de filmaciones": cantidad,
-                "Retorno total": retorno_total,
-                "Promedio de retorno": promedio_retorno
-            }
-        else:
-            return {"mensaje": "Actor no encontrado."}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error: {str(e)}")
+    """
+    Busca información sobre el éxito de un actor en base al nombre proporcionado.
+
+    Ejemplo de uso:
+    - URL: /actor/TomHanks
+    
+    Parámetros:
+    - `nombre_actor`: Nombre del actor (Ejemplo: "Tom Hanks")
+
+    Retorna:
+    - Número de películas en las que el actor ha participado.
+    - Retorno total de las películas.
+    - Promedio de retorno por película.
+    """
+    # Convertir a minúsculas para búsqueda insensible a mayúsculas
+    nombre_actor = nombre_actor.casefold()  # o nombre_actor.lower()
+
+    # Filtrar el dataset cast por el nombre del actor (también insensible a mayúsculas)
+    actor_films = cast_df[cast_df['cast_name'].str.casefold() == nombre_actor]
+    
+    if actor_films.empty:
+        raise HTTPException(status_code=404, detail="Actor no encontrado")
+
+    # Obtener las películas en las que ha participado
+    num_peliculas = actor_films.shape[0]
+    
+    # Unir con el dataset de movies para obtener el retorno
+    actor_movies = pd.merge(actor_films, movies, left_on='id', right_on='idMovies')
+    
+    # Verificar si hay información de ingresos en las películas
+    if 'revenue' not in actor_movies.columns:
+        raise HTTPException(status_code=500, detail="La información de ingresos no está disponible en el dataset de películas.")
+
+    # Calcular el retorno total y el promedio
+    retorno_total = actor_movies['revenue'].sum()
+    promedio_retorno = retorno_total / num_peliculas if num_peliculas > 0 else 0
+    
+    return {
+        "actor": nombre_actor,
+        "numero_peliculas": num_peliculas,
+        "retorno_total": retorno_total,
+        "promedio_retorno": promedio_retorno
+    }
 
 # 6. Función para obtener información sobre un director
 @app.get("/get_director/{nombre_director}")
