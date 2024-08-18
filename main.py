@@ -3,7 +3,8 @@ import pandas as pd
 from fastapi import HTTPException
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-from typing import Dict, Any
+from Notebooks.recomendacion import recomendar_peliculas_por_similitud  # Importar la función de recomendación
+
 
 app = FastAPI()
 
@@ -20,7 +21,9 @@ tfidf_matrix = tfidf_vectorizer.fit_transform(movies['overview'].fillna(''))
 movies['fecha_lanzamiento'] = pd.to_datetime(movies['release_date'], errors='coerce')
 
 # 1. Función para cantidad de filmaciones por mes
-@app.get("/cantidad_filmaciones_mes/{mes}")
+@app.get("/cantidad_filmaciones_mes/{mes}", description="Consulta la cantidad de películas estrenadas en un mes específico. Ejemplo de ingreso: enero",
+         operation_id="obtener_cantidad_filmaciones_por_mes"
+          )
 def cantidad_filmaciones_mes(mes: str):
     meses = {
         "enero": 1, "febrero": 2, "marzo": 3, "abril": 4,
@@ -32,25 +35,40 @@ def cantidad_filmaciones_mes(mes: str):
         cantidad = movies[movies['fecha_lanzamiento'].dt.month == mes_num].shape[0]
         return f"{cantidad} películas fueron estrenadas en el mes de {mes.capitalize()}."
     else:
-        return "Mes no válido."
+        return "Mes no válido. Por favor, ingrese un mes en español, por ejemplo: Octubre."
 
 # 2. Función para cantidad de filmaciones por día
-@app.get("/cantidad_filmaciones_dia/{dia}")
+@app.get("/cantidad_filmaciones_dia/{dia}", description="Consulta la cantidad de películas estrenadas en un día específico. Ejemplo de ingreso: martes", 
+         operation_id="obtener_cantidad_filmaciones_por_dia"
+         )
 def cantidad_filmaciones_dia(dia: str):
     dias = {
         "lunes": 0, "martes": 1, "miércoles": 2, "jueves": 3,
         "viernes": 4, "sábado": 5, "domingo": 6
     }
+    # Convertir el día a minúsculas para que no distinga entre mayúsculas y minúsculas
     dia_num = dias.get(dia.lower())
+    
     if dia_num is not None:
         cantidad = movies[movies['fecha_lanzamiento'].dt.weekday == dia_num].shape[0]
         return f"{cantidad} películas fueron estrenadas en los días {dia.capitalize()}."
     else:
-        return "Día no válido."
+        return "Día no válido. Por favor, ingrese un día en español, por ejemplo: martes."
+
 
 # 3. Función para obtener el score por título
-@app.get("/score_titulo/{titulo}")
+@app.get("/score_titulo/{titulo}", operation_id="obtener año y puntaje de peliculas")
 def score_titulo(titulo: str):
+    """
+    Se ingresa el título de una filmación esperando como respuesta el título
+    Parámetros:
+    - `Titulo`: Titulo de la pelicula (Ejemplo: "Toy Story")
+
+    Retorna:
+    - El titulo de la filmacion.
+    - Año de estreno de la película
+    - Puntaje (score/popularidad) de la pelicula
+    """
     film = movies[movies['title'].str.lower() == titulo.lower()]
     if not film.empty:
         titulo = film.iloc[0]['title']
@@ -61,8 +79,18 @@ def score_titulo(titulo: str):
         return "Película no encontrada."
 
 # 4. Función para obtener los votos por título
-@app.get("/votos_titulo/{titulo}")
+@app.get("/votos_titulo/{titulo}", operation_id="obtener promedio de votos por pelicula")
 def votos_titulo(titulo: str):
+    """
+    Se ingresa el título de una filmación esperando como respuesta el título
+    Parámetros:
+    - `Titulo`: Titulo de la pelicula (Ejemplo: "Jumanji")
+
+    Retorna:
+    - El titulo de la filmacion.
+    - La cantidad de votos de las película
+    - El valor promedio de las votaciones.
+    """
     film = movies[movies['title'].str.lower() == titulo.lower()]
     if not film.empty:
         votos = film.iloc[0]['vote_count']
@@ -73,9 +101,10 @@ def votos_titulo(titulo: str):
             return "La película no tiene suficientes valoraciones (menos de 2000)."
     else:
         return "Película no encontrada."
+    
 
-# 5. Función para obtener informacion sobre el actor
-@app.get("/actor/{nombre_actor}")
+# 6. Función para obtener informacion sobre el Actor
+@app.get("/actor/{nombre_actor}", operation_id="obtener detalles del Actor")
 def get_actor(nombre_actor: str):
     """
     Busca información sobre el éxito de un actor en base al nombre proporcionado.
@@ -92,10 +121,10 @@ def get_actor(nombre_actor: str):
     - Promedio de retorno por película.
     """
     # Convertir a minúsculas para búsqueda insensible a mayúsculas
-    nombre_actor = nombre_actor.casefold()  # o nombre_actor.lower()
+    nombre_actor_normalizado = nombre_actor.lower()  # o nombre_actor.casefold()
 
     # Filtrar el dataset cast por el nombre del actor (también insensible a mayúsculas)
-    actor_films = cast_df[cast_df['name_actor'].str.casefold() == nombre_actor]
+    actor_films = cast_df[cast_df['name_actor'].str.lower() == nombre_actor_normalizado]
     
     if actor_films.empty:
         raise HTTPException(status_code=404, detail="Actor no encontrado")
@@ -121,15 +150,12 @@ def get_actor(nombre_actor: str):
         "promedio_retorno": promedio_retorno
     }
 
-# 6. Función para obtener información sobre un director
-@app.get("/get_director")
-def get_director(nombre_director: str) -> Dict[str, Any]:
-    """
-    Busca información sobre el éxito de las películas dirigidas por el director proporcionado.
 
-    Ejemplo de uso:
-    - URL: /get_director?nombre_director=Steven%20Spielberg
-    
+# 6. Función para obtener informacion sobre el Director
+@app.get("/director/{nombre_director}", operation_id="obtener_peliculas_por_director")
+def get_director(nombre_director: str):
+    """
+    Description="Este endpoint devuelve las películas dirigidas por el director especificado y su éxito promedio basado en el retorno de inversión.
     Parámetros:
     - `nombre_director`: Nombre del director (Ejemplo: "Steven Spielberg")
 
@@ -138,87 +164,70 @@ def get_director(nombre_director: str) -> Dict[str, Any]:
     - Éxito promedio basado en el retorno de inversión.
     - Lista de películas con detalles como el título, fecha de lanzamiento, retorno, costo y ganancia.
 
-    Ejemplo de Respuesta:
-    {
-        "mensaje": "Este endpoint devuelve las películas dirigidas por el director especificado y su éxito promedio basado en el retorno de inversión.",
-        "ejemplo_de_uso": "Para buscar al director 'Steven Spielberg', realiza una solicitud GET a /get_director con el parámetro nombre_director=Steven%20Spielberg",
-        "nombre_director": "Steven Spielberg",
-        "exito_promedio": 0.45,
-        "peliculas": [
-            {
-                "title": "Jurassic Park",
-                "release_date": "1993-06-11",
-                "return": 0.78,
-                "budget": 63000000,
-                "revenue": 1070000000
-            },
-            ...
-        ]
+    Ejemplo de uso:
+    Realiza una solicitud GET a `/director/{nombre_director}` con el parámetro `nombre_director=Steven%20Spielberg`.
     """
-    try:
-        # Filtrar el dataset de crew para obtener las películas del director especificado
-        director_movies = crew_df[
-            (crew_df['crew_name'] == nombre_director) & 
-            (crew_df['crew_job'] == 'Director')
+    
+    # Normalizar el nombre del director a minúsculas
+    nombre_director_normalizado = nombre_director.lower()
+
+    # Filtrar el dataset de crew para obtener las películas del director especificado (en minúsculas)
+    director_movies = crew_df[
+        (crew_df['crew_name'].str.lower() == nombre_director_normalizado) & 
+        (crew_df['crew_job'] == 'Director')
         ]
         
-        if director_movies.empty:
-            raise HTTPException(status_code=404, detail="Director no encontrado. Asegúrate de que el nombre esté escrito correctamente y que el director haya dirigido al menos una película en la base de datos.")
+    if director_movies.empty:
+        raise HTTPException(status_code=404, detail="Director no encontrado. Asegúrate de que el nombre esté escrito correctamente y que el director haya dirigido al menos una película en la base de datos.")
         
-        # Unir con el dataset de movies para obtener detalles de las películas
-        movies_director = pd.merge(director_movies, movies, on='idMovies')
+    # Unir con el dataset de movies para obtener detalles de las películas
+    movies_director = pd.merge(director_movies, movies, on='idMovies')
         
-        # Verificar si hay datos después de la unión
-        if movies_director.empty:
-            raise HTTPException(status_code=404, detail="No se encontraron películas dirigidas por el director especificado.")
+    if movies_director.empty:
+        raise HTTPException(status_code=404, detail="No se encontraron películas dirigidas por el director especificado.")
         
-        # Seleccionar columnas de interés
-        result = movies_director[['title', 'release_date', 'return', 'budget', 'revenue']]
+    # Seleccionar columnas de interés
+    result = movies_director[['title', 'release_date', 'return', 'budget', 'revenue']]
         
-        # Calcular el éxito promedio del director
-        avg_return = result['return'].mean()
+     # Calcular el éxito promedio del director
+    avg_return = result['return'].mean()
         
-        # Convertir DataFrame a diccionario para la respuesta
-        movies_list = result.to_dict(orient='records')
+    # Convertir DataFrame a diccionario para la respuesta
+    movies_list = result.to_dict(orient='records')
         
-        return {
-            'mensaje': 'Este endpoint devuelve las películas dirigidas por el director especificado y su éxito promedio basado en el retorno de inversión.',
-            'ejemplo_de_uso': 'Para buscar al director "Steven Spielberg", realiza una solicitud GET a /get_director con el parámetro nombre_director=Steven%20Spielberg',
-            'nombre_director': nombre_director,
+    # Retornar la respuesta junto con el mensaje inicial
+    return {
+            'mensaje': f"Este endpoint devuelve las películas dirigidas por el director {nombre_director.title()} y su éxito promedio basado en el retorno de inversión.",
+            'ejemplo_de_uso': f"Para buscar al director \"{nombre_director.title()}\", realiza una solicitud GET a /director/{nombre_director.title()}",
             'exito_promedio': avg_return,
             'peliculas': movies_list
         }
-    except Exception as e:
-        # Captura cualquier excepción inesperada
-        raise HTTPException(status_code=500, detail=f"Error interno del servidor: {str(e)}")
-    
 
-#Funcion para el  Sistema de recomendación de Peliculas
-def recomendar_peliculas(titulo_pelicula, num_recomendaciones=5):
-    # Obtener el índice de la película
-    idx = movies[movies['title'] == titulo_pelicula].index
-    if idx.empty:
-        return []
-
-    idx = idx[0]
-
-    # Calcular la similitud con todas las demás películas
-    cosine_similarities = cosine_similarity(tfidf_matrix[idx:idx+1], tfidf_matrix).flatten()
-
-    # Obtener los índices de las películas más similares
-    similar_indices = cosine_similarities.argsort()[-num_recomendaciones-1:-1]
-
-    # Obtener los nombres de las películas más similares
-    similar_movies = movies.iloc[similar_indices]['title'].tolist()
-    return similar_movies
-
+# Sistema de Recomendacion
 @app.get("/recomendacion/")
 async def recomendacion(titulo: str):
-    # Obtener las recomendaciones
-    peliculas_recomendadas = recomendar_peliculas(titulo)
+    """
+    Busca recomendaciones de películas similares basadas en el título de la película proporcionada.
+
+    Ejemplo de uso:
+    - URL: /recomendacion/?titulo=Jumanji
+
+    Parámetros:
+    - `titulo`: Título de la película para la que se desean obtener recomendaciones (Ejemplo: "Jumanji").
+    """
+
+    # Verificar si el título está vacío o no es válido
+    if not titulo:
+        raise HTTPException(status_code=400, detail="Debe ingresar un título de película. Ejemplo: 'Jumanji'.")
+
+    # Normalizar el título a minúsculas
+    titulo_normalizado = titulo.lower()
+
+    # Obtener las recomendaciones (considerando que la función de recomendación también normaliza los títulos)
+    peliculas_recomendadas = recomendar_peliculas_por_similitud(titulo_normalizado)
 
     # Verificar si la película fue encontrada
     if not peliculas_recomendadas:
-        raise HTTPException(status_code=404, detail="Película no encontrada")
+        raise HTTPException(status_code=404, detail="Película no encontrada. Asegúrese de ingresar el título correctamente, sin importar las mayúsculas o minúsculas. Ejemplo: 'Jumanji'.")
 
     return {"recomendaciones": peliculas_recomendadas}
