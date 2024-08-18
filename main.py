@@ -3,14 +3,14 @@ import pandas as pd
 from fastapi import HTTPException
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+from typing import Dict, Any
 
 app = FastAPI()
 
 # Cargar el dataset
-movies = pd.read_parquet("Dataset/movies_modificado.parquet")  
-crew_df = pd.read_csv("Dataset/crew_credits.csv")  
-cast_df = pd.read_csv("Dataset/cast_credits.csv")  
-
+movies = pd.read_parquet("Dataset_procesados/movies_modificado.parquet")  
+crew_df = pd.read_parquet("Dataset_procesados/credits_crew.parquet") 
+cast_df = pd.read_parquet("Dataset_procesados/credits_cast.parquet") 
 
  #Crear el vectorizador y ajustar al dataset
 tfidf_vectorizer = TfidfVectorizer(stop_words='english')
@@ -95,7 +95,7 @@ def get_actor(nombre_actor: str):
     nombre_actor = nombre_actor.casefold()  # o nombre_actor.lower()
 
     # Filtrar el dataset cast por el nombre del actor (también insensible a mayúsculas)
-    actor_films = cast_df[cast_df['cast_name'].str.casefold() == nombre_actor]
+    actor_films = cast_df[cast_df['name_actor'].str.casefold() == nombre_actor]
     
     if actor_films.empty:
         raise HTTPException(status_code=404, detail="Actor no encontrado")
@@ -104,7 +104,7 @@ def get_actor(nombre_actor: str):
     num_peliculas = actor_films.shape[0]
     
     # Unir con el dataset de movies para obtener el retorno
-    actor_movies = pd.merge(actor_films, movies, left_on='id', right_on='idMovies')
+    actor_movies = pd.merge(actor_films, movies, left_on='idMovies', right_on='idMovies')
     
     # Verificar si hay información de ingresos en las películas
     if 'revenue' not in actor_movies.columns:
@@ -122,30 +122,76 @@ def get_actor(nombre_actor: str):
     }
 
 # 6. Función para obtener información sobre un director
-@app.get("/get_director/{nombre_director}")
-def get_director(nombre_director: str):
-    director_films = movies[movies['NameReparto'].str.contains(nombre_director, case=False, na=False)]
-    if not director_films.empty:
-        film_list = []
-        for _, film in director_films.iterrows():
-            nombre = film['title']
-            fecha = film['release_date']
-            retorno = film['return']
-            costo = film['budget']
-            ganancia = film['revenue'] - costo
-            film_list.append({
-                "nombre": nombre,
-                "fecha": fecha,
-                "retorno": retorno,
-                "costo": costo,
-                "ganancia": ganancia
-            })
+@app.get("/get_director")
+def get_director(nombre_director: str) -> Dict[str, Any]:
+    """
+    Busca información sobre el éxito de las películas dirigidas por el director proporcionado.
+
+    Ejemplo de uso:
+    - URL: /get_director?nombre_director=Steven%20Spielberg
+    
+    Parámetros:
+    - `nombre_director`: Nombre del director (Ejemplo: "Steven Spielberg")
+
+    Retorna:
+    - Mensaje descriptivo.
+    - Éxito promedio basado en el retorno de inversión.
+    - Lista de películas con detalles como el título, fecha de lanzamiento, retorno, costo y ganancia.
+
+    Ejemplo de Respuesta:
+    {
+        "mensaje": "Este endpoint devuelve las películas dirigidas por el director especificado y su éxito promedio basado en el retorno de inversión.",
+        "ejemplo_de_uso": "Para buscar al director 'Steven Spielberg', realiza una solicitud GET a /get_director con el parámetro nombre_director=Steven%20Spielberg",
+        "nombre_director": "Steven Spielberg",
+        "exito_promedio": 0.45,
+        "peliculas": [
+            {
+                "title": "Jurassic Park",
+                "release_date": "1993-06-11",
+                "return": 0.78,
+                "budget": 63000000,
+                "revenue": 1070000000
+            },
+            ...
+        ]
+    """
+    try:
+        # Filtrar el dataset de crew para obtener las películas del director especificado
+        director_movies = crew_df[
+            (crew_df['crew_name'] == nombre_director) & 
+            (crew_df['crew_job'] == 'Director')
+        ]
+        
+        if director_movies.empty:
+            raise HTTPException(status_code=404, detail="Director no encontrado. Asegúrate de que el nombre esté escrito correctamente y que el director haya dirigido al menos una película en la base de datos.")
+        
+        # Unir con el dataset de movies para obtener detalles de las películas
+        movies_director = pd.merge(director_movies, movies, on='idMovies')
+        
+        # Verificar si hay datos después de la unión
+        if movies_director.empty:
+            raise HTTPException(status_code=404, detail="No se encontraron películas dirigidas por el director especificado.")
+        
+        # Seleccionar columnas de interés
+        result = movies_director[['title', 'release_date', 'return', 'budget', 'revenue']]
+        
+        # Calcular el éxito promedio del director
+        avg_return = result['return'].mean()
+        
+        # Convertir DataFrame a diccionario para la respuesta
+        movies_list = result.to_dict(orient='records')
+        
         return {
-            "director": nombre_director,
-            "filmaciones": film_list
+            'mensaje': 'Este endpoint devuelve las películas dirigidas por el director especificado y su éxito promedio basado en el retorno de inversión.',
+            'ejemplo_de_uso': 'Para buscar al director "Steven Spielberg", realiza una solicitud GET a /get_director con el parámetro nombre_director=Steven%20Spielberg',
+            'nombre_director': nombre_director,
+            'exito_promedio': avg_return,
+            'peliculas': movies_list
         }
-    else:
-        return "Director no encontrado."
+    except Exception as e:
+        # Captura cualquier excepción inesperada
+        raise HTTPException(status_code=500, detail=f"Error interno del servidor: {str(e)}")
+    
 
 #Funcion para el  Sistema de recomendación de Peliculas
 def recomendar_peliculas(titulo_pelicula, num_recomendaciones=5):
