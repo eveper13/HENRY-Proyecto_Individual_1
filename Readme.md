@@ -34,15 +34,21 @@ Tu guía cinéfila personalizada... El arte de la similitud: Implementa un siste
 
 Tecnologías Usadas
 Python: Nuestro lenguaje principal, tan versátil como necesario.
+
 FastAPI: La herramienta que da vida a nuestra API, rápida y eficiente, lista para manejar tus consultas cinematográficas.
+
 Pandas, NumPy: Los aliados esenciales para manipular y entender nuestros datos.
+
 Scikit-learn: El motor que impulsa nuestro sistema de recomendación, utilizando la magia de la similitud coseno.
+
 Matplotlib, Seaborn: Visualizaciones que transforman números en imágenes y estadísticas en historias.
+
 NLTK: La herramienta detrás de nuestra nube de palabras, que revela los temas más populares de los títulos cinematográficos.
+
 Render, Railway u otro servicio de deployment: Para desplegar la API y hacerla accesible desde cualquier lugar.
 
 Estructura del Proyecto
-'''
+```
 ├── Dataset_original/
 │   ├── cast_credits.csv
 │   ├── crew_credits.csv
@@ -59,7 +65,7 @@ Estructura del Proyecto
 ├── main.py
 ├── README.md
 └── requirements.txt
-'''
+```
 Dataset_original/: Aquí comienza todo. Los datos en bruto, esperando ser transformados.
 Dataset_procesados/: El resultado del ETL, datos limpios y listos para ser analizados.
 Notebooks/: Tu laboratorio de ideas, donde ocurre la magia del ETL y las recomendaciones.
