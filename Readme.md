@@ -35,7 +35,7 @@ Implementación de una función recomendacion(titulo) que devuelve una lista de 
 El sistema de recomendación implementa un modelo que mide la similitud entre las películas basándose en características como género, país de producción y puntuaciones. 
 
 Requisitos Técnicos
-Python 3.8+
+Python
 FastAPI
 Pandas, NumPy
 Scikit-learn
