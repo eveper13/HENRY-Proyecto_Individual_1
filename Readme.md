@@ -1,47 +1,45 @@
-🎥 Sistema de Recomendación de Películas - Un Viaje hacia la Experiencia Cinematográfica Perfecta
-
+🎥 Sistema de Recomendación de Películas - Tu Compañero Perfecto en la Búsqueda de la Película Ideal
 Descripción del Proyecto
-Este repositorio contiene el código y los archivos necesarios para desarrollar un sistema de recomendación de películas. El objetivo es construir un MVP que implemente un flujo completo de Machine Learning, desde el procesamiento y limpieza de datos hasta la creación de una API con FastAPI para consumir los datos y proporcionar recomendaciones. El proyecto aborda varios aspectos clave, como el ETL (Extract, Transform, Load), análisis exploratorio de datos (EDA), construcción de un modelo de recomendación y su implementación mediante una API.
+¿Alguna vez te has encontrado indeciso frente a una lista interminable de películas, sin saber cuál elegir? Imagina tener un sistema que entienda tus gustos y te sugiera películas que realmente disfrutarás. Este proyecto es precisamente eso: un viaje para crear la herramienta definitiva que te acompañe en tu búsqueda de la experiencia cinematográfica perfecta.
+
+Este repositorio contiene todo lo necesario para desarrollar un Sistema de Recomendación de Películas. Desde la limpieza y transformación de los datos hasta la implementación de un modelo de recomendación, culminando en una API que podrás consultar desde cualquier lugar, este proyecto te llevará por un recorrido completo en el mundo del Machine Learning y el análisis de datos.
+
+¿Qué puedes esperar?
+Un viaje transformador: Aprende cómo desglosar y procesar datos complejos para convertirlos en información valiosa.
+Descubre patrones a través del análisis exploratorio de datos (EDA), se muestran las tendencias y relaciones que hacen que una película destaque.
+
+Recomendaciones personalizadas: Implementa un modelo de recomendación que, al igual que un buen amigo cinéfilo, conoce tus gustos y te sugiere películas que amarás.
 
 Requerimientos del Proyecto
-Este proyecto aborda los siguientes requerimientos principales:
-
 Transformaciones de datos (ETL):
-
-Desanidamiento de campos como belongs_to_collection, production_companies, entre otros.
-... 
-
-Desarrollo de la API:
-
-Uso de FastAPI para crear 6 endpoints que permiten consultar información sobre las películas, actores y directores.
-La API incluye funciones para devolver datos como el número de películas por mes, día, puntuación de títulos, votaciones, éxito de actores y directores, y recomendaciones basadas en similitud.
+Desanidar para revelar: Transformamos de 5 campos, separando la información anidada para obtener datos más claros y útiles.
+Se identificaron y gestionaron los valores nulos y duplicados en los datasets movies, cast_credits, y crew_credits asi como la coversion de algunos tipos de datos para asegurar que estén en el formato correcto para su análisis posterior.
 
 Análisis Exploratorio de Datos (EDA):
-El EDA incluye análisis detallados de las variables, correlaciones, detección de outliers y patrones por género y país de producción. Algunas de las visualizaciones generadas incluyen:
+Sumérgete en un análisis detallado de las variables, descubre correlaciones sorprendentes, detecta outliers que podrían arruinar la experiencia y sigue el rastro de los patrones que dictan el éxito en la taquilla. Visualizaciones como nubes de palabras y gráficos de correlación te darán una nueva perspectiva del mundo cinematográfico.
 
-Análisis de las relaciones entre variables mediante correlaciones.
-Gráficos de correlación entre variables.
-Distribución de puntuaciones y votaciones.
-Nube de palabras de títulos más frecuentes.
-Análisis de outliers en presupuesto y recaudación.
-Identificación de patrones por género y país de producción.
-Creación de una nube de palabras basada en los títulos de las películas.
-Visualización de gráficos para obtener insights clave que preparan los datos para el sistema de recomendación.
+Las conexiones secretas: Explora cómo diferentes variables se interrelacionan y qué nos dicen sobre la industria del cine.
+Patrones visuales: Desde los géneros más populares hasta Top 10 de Actores con más Películas y otra grafica que nos arroja el actor con  Mayor Retorno Promedio, asi como tambien el de Directores.
 
-Sistema de Recomendación
-Creación de un modelo de recomendación de películas que sugiere títulos similares a la película ingresada.
-Implementación de una función recomendacion(titulo) que devuelve una lista de 5 películas similares basadas en la puntuación de similitud.
+Desarrollo de la API:
+El poder de la personalización: Con FastAPI, hemos creado 6 endpoints poderosos que no solo te proporcionan datos, sino que también cuentan historias. Explora:
+¿Qué mes y dia es el más prolífico para los estrenos? Analiza los datos de estreno para identificar el mes con la mayor cantidad de lanzamientos.
+¿Qué directores tienen la mejor racha de éxitos? Descubre cuáles directores han tenido una serie de películas exitosas.
+¿Qué película deberías ver ahora mismo? Obtén recomendaciones personalizadas basadas en tus preferencias y el análisis de similitud.
+Se verifica la popularidad y año de estreno de tu pelicula de preferencia
+Puedes ver y probar la API en este enlace de Render: https://henry-proyecto-individual-1-du8k.onrender.com/docs
 
-El sistema de recomendación implementa un modelo que mide la similitud entre las películas basándose en características como género, país de producción y puntuaciones. 
+Sistema de Recomendación:
+Tu guía cinéfila personalizada... El arte de la similitud: Implementa un sistema que utiliza la similitud entre películas para encontrar la próxima que te atrapará. Basado en la similitud de puntuación, el sistema evalúa cada película y la compara con el resto. Las películas se ordenan según su puntuación de similitud, y se devuelve una lista de las 5 películas con el puntaje más alto, presentadas en orden descendente.
 
-Requisitos Técnicos
-Python
-FastAPI
-Pandas, NumPy
-Scikit-learn
-Matplotlib, Seaborn (para visualización)
-NLTK o similar (para la creación de la nube de palabras)
-Render, Railway u otro servicio de deployment (para desplegar la API)
+Tecnologías Usadas
+Python: Nuestro lenguaje principal, tan versátil como necesario.
+FastAPI: La herramienta que da vida a nuestra API, rápida y eficiente, lista para manejar tus consultas cinematográficas.
+Pandas, NumPy: Los aliados esenciales para manipular y entender nuestros datos.
+Scikit-learn: El motor que impulsa nuestro sistema de recomendación, utilizando la magia de la similitud coseno.
+Matplotlib, Seaborn: Visualizaciones que transforman números en imágenes y estadísticas en historias.
+NLTK: La herramienta detrás de nuestra nube de palabras, que revela los temas más populares de los títulos cinematográficos.
+Render, Railway u otro servicio de deployment: Para desplegar la API y hacerla accesible desde cualquier lugar.
 
 Estructura del Proyecto
 
@@ -58,18 +56,19 @@ Estructura del Proyecto
 │   ├── recomendacion.py
 ├── Reports/
 │   ├── EDA.ipynb
-│  
 ├── main.py
 ├── README.md
 └── requirements.txt
 
-Dataset_original/: Contiene los datasets utilizados en el proyecto.
-Dataset_procesados: Contiene los datasets que se generaron en el proceso de ETL.
-Notebooks/: Contiene los notebooks de Jupyter usados para el ETL y la funcion de recomendacion.py para usar en el main.py para el sistema de recomendacion de peliculas
-Reports/: Contiene el notebook de Jupyter usados para el EDA
-main.py: codigo de las funciones de fastapi solicitadas...
-requirements.txt: Lista de dependencias del proyecto.
-
+Dataset_original/: Aquí comienza todo. Los datos en bruto, esperando ser transformados.
+Dataset_procesados/: El resultado del ETL, datos limpios y listos para ser analizados.
+Notebooks/: Tu laboratorio de ideas, donde ocurre la magia del ETL y las recomendaciones.
+Reports/: Donde los descubrimientos del EDA cobran vida en forma de insights y visualizaciones.
+main.py: El corazón de la API, con todas las funciones que harán realidad el sistema de recomendación.
+README.md: Esta misma guía que estás leyendo.
+requirements.txt: Las herramientas que necesitarás para que todo funcione a la perfección.
 Autor
-Desarrollado por Evelyn Perez.
 
+Este proyecto fue desarrollado  por Evelyn Perez.
+
+¡Explora, contribuye y disfruta de tu experiencia cinematográfica personalizada!
