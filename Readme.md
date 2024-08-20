@@ -1,5 +1,4 @@
-![Hora de Pelis](img/comida-cine-entradas.jpg)
-
+![Hora de Pelis](img/movies.webp)
 
 🎥
 
@@ -7,13 +6,13 @@
 Descripción del Proyecto
 ¿Alguna vez te has encontrado indeciso frente a una lista interminable de películas, sin saber cuál elegir? Imagina tener un sistema que entienda tus gustos y te sugiera películas que realmente disfrutarás. Este proyecto es precisamente eso: un viaje para crear la herramienta definitiva que te acompañe en tu búsqueda de la experiencia cinematográfica perfecta.
 
-    Este repositorio contiene todo lo necesario para desarrollar un Sistema de Recomendación de Películas. Desde la limpieza y transformación de los datos hasta la implementación de un modelo de recomendación, culminando en una API que podrás consultar desde cualquier lugar, este proyecto te llevará por un recorrido completo en el mundo del Machine Learning y el análisis de datos.
+Este repositorio contiene todo lo necesario para desarrollar un Sistema de Recomendación de Películas. Desde la limpieza y transformación de los datos hasta la implementación de un modelo de recomendación, culminando en una API que podrás consultar desde cualquier lugar, este proyecto te llevará por un recorrido completo en el mundo del Machine Learning y el análisis de datos.
 
 ¿Qué puedes esperar?
     Un viaje transformador: Aprende cómo desglosar y procesar datos complejos para convertirlos en información valiosa.
 Descubre patrones a través del análisis exploratorio de datos (EDA), se muestran las tendencias y relaciones que hacen que una película destaque.
 
-    Recomendaciones personalizadas: Implementa un modelo de recomendación que, al igual que un buen amigo cinéfilo, conoce tus gustos y te sugiere películas que amarás.
+Recomendaciones personalizadas: Implementa un modelo de recomendación que, al igual que un buen amigo cinéfilo, conoce tus gustos y te sugiere películas que amarás.
 
 Requerimientos del Proyecto
 Transformaciones de datos (ETL):
