@@ -1,7 +1,9 @@
 ![Hora de Pelis](img/movies.webp)
 
 
-🎥 Sistema de Recomendación de Películas - Tu Compañero Perfecto en la Búsqueda de la Película Ideal
+🎥 Sistema de Recomendación de Películas 
+
+ Tu Compañero Perfecto en la Búsqueda de la Película Ideal
 Descripción del Proyecto
 ¿Alguna vez te has sentido perdido entre miles de opciones de películas, sin saber cuál elegir? Este proyecto es la solución perfecta: un sistema de recomendación de películas diseñado para entender tus gustos y sugerirte títulos que disfrutarás.
 
@@ -11,6 +13,8 @@ En este repositorio, encontrarás todo lo necesario para desarrollar un Sistema 
 Transformaciones de Datos (ETL): Aprende a desanidar y procesar datos complejos, gestionando valores nulos y duplicados, para prepararlos para un análisis exhaustivo.
 Análisis Exploratorio de Datos (EDA): Descubre correlaciones sorprendentes y patrones ocultos que dictan el éxito en la taquilla, con visualizaciones atractivas que te ofrecen una nueva perspectiva del mundo cinematográfico.
 Recomendaciones Personalizadas: Implementa un modelo de recomendación basado en la similitud de puntuación, que selecciona las 5 películas que más se alinean con tus gustos.
+
+
 ![Como funciona](img/sistema-de-recomendacion.png)
 
 
@@ -67,6 +71,7 @@ README.md: Esta guía que estás leyendo.
 
 requirements.txt: Herramientas necesarias para ejecutar el proyecto.
 Autor
+
 
 
 Este proyecto fue desarrollado por Evelyn Perez.
