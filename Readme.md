@@ -1,4 +1,4 @@
-![Hora de Pelis](img/comida-cine-entradas)
+![Hora de Pelis](img/comida-cine-entradas.jpg)
 
 
 🎥
@@ -37,7 +37,7 @@ Desarrollo de la API:
 Sistema de Recomendación:
     Tu guía cinéfila personalizada... El arte de la similitud: Implementa un sistema que utiliza la similitud entre películas para encontrar la próxima que te atrapará. Basado en la similitud de puntuación, el sistema evalúa cada película y la compara con el resto. Las películas se ordenan según su puntuación de similitud, y se devuelve una lista de las 5 películas con el puntaje más alto, presentadas en orden descendente.
 
-    ![Sistema de Recomendacion](img/sistema-de-recomendacion)
+![Sistema de Recomendacion](img/sistema-de-recomendacion.png)
 
 Tecnologías Usadas
 Python: Nuestro lenguaje principal, tan versátil como necesario.
