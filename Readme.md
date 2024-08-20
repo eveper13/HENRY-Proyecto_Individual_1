@@ -42,7 +42,7 @@ NLTK: La herramienta detrás de nuestra nube de palabras, que revela los temas m
 Render, Railway u otro servicio de deployment: Para desplegar la API y hacerla accesible desde cualquier lugar.
 
 Estructura del Proyecto
-
+'''
 ├── Dataset_original/
 │   ├── cast_credits.csv
 │   ├── crew_credits.csv
@@ -59,7 +59,7 @@ Estructura del Proyecto
 ├── main.py
 ├── README.md
 └── requirements.txt
-
+'''
 Dataset_original/: Aquí comienza todo. Los datos en bruto, esperando ser transformados.
 Dataset_procesados/: El resultado del ETL, datos limpios y listos para ser analizados.
 Notebooks/: Tu laboratorio de ideas, donde ocurre la magia del ETL y las recomendaciones.
