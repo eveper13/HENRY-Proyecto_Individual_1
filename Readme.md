@@ -53,7 +53,7 @@ El poder de la personalización: Hemos creado 6 endpoints que no solo proporcion
   
 - **Verifica la popularidad y año de estreno de tus películas favoritas**
 
-  
+
   Todo desde un solo lugar.
 
 
@@ -68,24 +68,28 @@ Puedes ver y probar la API en este enlace: [Render - FastAPI](https://henry-proy
 
 ## Estructura del Proyecto
 
-```scss
-├── [Dataset_original/](./Dataset_original/)
-│   ├── [cast_credits.csv](./Dataset_original/cast_credits.csv)
-│   ├── [crew_credits.csv](./Dataset_original/crew_credits.csv)
-│   ├── [movies_dataset.csv](./Dataset_original/movies_dataset.csv)
-├── [Dataset_procesados/](./Dataset_procesados/)
-│   ├── [credits_cast.parquet](./Dataset_procesados/credits_cast.parquet)
-│   ├── [credits_crew.parquet](./Dataset_procesados/credits_crew.parquet)
-│   ├── [movies_modificado.parquet](./Dataset_procesados/movies_modificado.parquet)
-├── [Notebooks/](./Notebooks/)
-│   ├── [ETL.ipynb](./Notebooks/ETL.ipynb)
-│   ├── [recomendacion.py](./Notebooks/recomendacion.py)
-├── [Reports/](./Reports/)
-│   ├── [EDA.ipynb](./Reports/EDA.ipynb)
-├── [main.py](./main.py)
-├── [README.md](./README.md)
-└── [requirements.txt](./requirements.txt)
+## Estructura del Proyecto
 
+- [Dataset_original/](./Dataset_original/)
+  - [cast_credits.csv](./Dataset_original/cast_credits.csv)
+  - [crew_credits.csv](./Dataset_original/crew_credits.csv)
+  - [movies_dataset.csv](./Dataset_original/movies_dataset.csv)
+  
+- [Dataset_procesados/](./Dataset_procesados/)
+  - [credits_cast.parquet](./Dataset_procesados/credits_cast.parquet)
+  - [credits_crew.parquet](./Dataset_procesados/credits_crew.parquet)
+  - [movies_modificado.parquet](./Dataset_procesados/movies_modificado.parquet)
+  
+- [Notebooks/](./Notebooks/)
+  - [ETL.ipynb](./Notebooks/ETL.ipynb)
+  - [recomendacion.py](./Notebooks/recomendacion.py)
+  
+- [Reports/](./Reports/)
+  - [EDA.ipynb](./Reports/EDA.ipynb)
+  
+- [main.py](./main.py)
+- [README.md](./README.md)
+- [requirements.txt](./requirements.txt)
 
 Dataset_original/: Datos en bruto, listos para ser transformados.
 Dataset_procesados/: Resultados del ETL, datos limpios y listos para análisis.
@@ -101,6 +105,4 @@ Este proyecto fue desarrollado por Evelyn Perez.
 
 ¡Explora, contribuye y disfruta de tu experiencia cinematográfica personalizada!
 
-
-Video Explicativo:
-Puedes ver una explicación completa del proyecto en este video.
+Puedes ver una explicación completa del proyecto en este video: [Video Explicativo](tu_link_al_video).
