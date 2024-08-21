@@ -105,4 +105,4 @@ Este proyecto fue desarrollado por Evelyn Perez.
 
 ¡Explora, contribuye y disfruta de tu experiencia cinematográfica personalizada!
 
-Puedes ver una explicación completa del proyecto en este video: [Video Explicativo](tu_link_al_video).
+Puedes ver una explicación completa del proyecto en este video: [Video Explicativo](https://youtu.be/Aotk3HxLSsA?si=QxQm0vrSXKOGJQrE).
