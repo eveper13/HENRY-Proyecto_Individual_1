@@ -66,7 +66,6 @@ Puedes ver y probar la API en este enlace: [Render - FastAPI](https://henry-proy
 
 ---
 
-## Estructura del Proyecto
 
 ## Estructura del Proyecto
 
@@ -90,6 +89,7 @@ Puedes ver y probar la API en este enlace: [Render - FastAPI](https://henry-proy
 - [main.py](./main.py)
 - [README.md](./README.md)
 - [requirements.txt](./requirements.txt)
+
 
 Dataset_original/: Datos en bruto, listos para ser transformados.
 Dataset_procesados/: Resultados del ETL, datos limpios y listos para análisis.
